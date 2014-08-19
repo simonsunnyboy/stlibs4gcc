@@ -1,5 +1,5 @@
 /*
- * test program 2 for IKBD routines
+ * test program 1 for IKBD routines
  * (c) 2010/14 by Simon Sunnyboy / Paradize
  *
  * check certain key events

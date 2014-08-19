@@ -28,7 +28,7 @@ TST=testikbd
 APP=$(TST).tos
 LIB=libikbd.a
 
-all: $(LIB) $(APP) 
+all: $(LIB) $(APP) ikbd_joy.tos
 
 CSOURCES=keys.c mouse.c
 		
@@ -38,14 +38,18 @@ $(APP): $(OBJECTS) startup.S main.c depend
 	$(CC) $(CFLAGS) startup.S main.c $(LIB) -o $(APP)
 	m68k-atari-mint-strip $(APP)
 
+ikbd_joy.tos: $(OBJECTS) startup.S main_joy.c depend
+	$(CC) $(CFLAGS) startup.S main_joy.c $(LIB) -o ikbd_joy.tos
+	m68k-atari-mint-strip ikbd_joy.tos
+
 $(LIB): $(OBJECTS)
 	$(AR) rcs $(LIB) $(OBJECTS) 
 		
 .PHONY clean:
-	- rm -rf *.o $(LIB) depend $(APP)
+	- rm -rf *.o $(LIB) depend $(APP) ikbd_joy.tos
 
-depend: $(CSOURCES) main.c
-		$(CC) $(CFLAGS) $(INCLUDE) -M $(CSOURCES) main.c > depend
+depend: $(CSOURCES) main.c main_joy.c
+		$(CC) $(CFLAGS) $(INCLUDE) -M $(CSOURCES) main.c main_joy.c > depend
 
 	
 ifneq (clean,$(MAKECMDGOALS))
