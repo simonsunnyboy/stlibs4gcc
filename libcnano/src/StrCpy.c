@@ -1,7 +1,7 @@
 /**
  * libcnano for Atari ST
- * @file libcnano.h
- * @brief common library header defining all available functions
+ * @file StrCpy.c
+ * @brief implementation of StrCpy() and derivates
  * @copyright (c) 2014 Matthias Arndt <marndt@asmsoftware.de>
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -22,19 +22,50 @@
  * 
  */
 
-#ifndef LIBCNANO_H
-	#define LIBCNANO_H
+#include "libcnano.h"
+
+/**
+ * @brief copies a source string to a destination string
+ * @details The trailing 0x00 char is also copied.
+ */
+void StrCpy(char * src,  char * dest)
+{
+	while(*src != '\0')
+	{
+		*dest++=*src++;
+	}
+	*dest='\0';
 	
-	#include <stdbool.h>
-	#include <stdint.h>
-	
-	/* memory copy functions */
-	void MemCpy32(void * src, void * dest, uint32_t len);
-	
-	/* String handling functions */
-	bool StrLeft(char * src, char * left_part);
-	bool StrMid(char * src, uint32_t start_pos, char * match);
-	void StrCpy(char * src,  char * dest);
-	void StrMidCpy(char * dest, uint32_t start_pos, char * src);
-	
-#endif
+	return;
+}
+
+/**
+ * @brief copy a smaller substring into a larger source string at an arbitrary position
+ * @details A trailing 0x00 char is not copied from the substring. 
+ *          If the substring is longer than the destination string, the copy stops at the 0x00 char.
+ * @param[in] dest is the main string
+ * @param[in] start_pos is the index where data is to copied
+ * @param[in] src is the substring to be copied into the main string
+ */
+void StrMidCpy(char * dest, uint32_t start_pos, char * src)
+{
+    
+    /* find start of string */
+    while((start_pos > 0)&&(*dest != '\0'))
+    {
+        dest++;
+        start_pos--;
+    }
+    
+    /* is the string longer than the desired starting position? */
+    if(*dest != '\0')
+    {
+       	while((*dest != '\0')&&(*src != '\0'))
+		{
+			*dest++=*src ++;
+		}
+    }
+    
+    return;
+}
+
