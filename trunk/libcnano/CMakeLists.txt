@@ -19,5 +19,7 @@ link_directories(${CMAKE_SOURCE_DIR})
 add_library(cnano
 	src/libcnano.h
 	src/MemCpy32.c
+	src/StrCpy.c
+	src/StrLeft.c
 )
 
