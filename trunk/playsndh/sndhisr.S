@@ -37,7 +37,7 @@ _SNDH_PlayTuneISR:
 	move.w	14(a6),d0			| subtune
 	move.b	0x484.w,(a0)+
 	clr.b	0x484.w			    |keyclick off
-	move.l	#0x08000000,0xffff8800.w	|die
+	move.l	#0x08000000,0xffff8800.w	|die YM2149
 	move.l	#0x09000000,0xffff8800.w	|die
 	move.l	#0x0A000000,0xffff8800.w	|die ;)
 	move.l	sndhpoi(pc),a0
@@ -45,7 +45,7 @@ _SNDH_PlayTuneISR:
 	lea	oldtc(pc),a0
 	move.l	0x114.w,(a0)		|store old timer c
 	lea	newtc(pc),a0
-	move.l	a0,0x114.w 		|new timer c vector
+	move.l	a0,0x114.w 		    |new timer c vector
 	unlk a6
     rts
 
@@ -60,8 +60,8 @@ _SNDH_StopTuneISR:
 | *** new Timer C ISR for handling replay ***
 newtc:
 	movem.l	a0-a6/d0-d7,-(sp)
-	lea	tccount(pc),a0		|synthese any replay rate from timer c
-	move.w	sndhfrq(pc),d0		|
+	lea	tccount(pc),a0		|synthesize any replay rate from timer c
+	move.w	sndhfrq(pc),d0	|
 	sub.w	d0,(a0) 		|
 	bgt.s	nosndh			|
 	add.w	#200,(a0)		|
@@ -76,7 +76,7 @@ dosndh:
 
 nosndh:
 	movem.l	(sp)+,a0-a6/d0-d7
-	move.l	oldtc(pc),-(sp) 	|system friendly |)
+	move.l	oldtc(pc),-(sp) 	|system friendly  jump to old Timer C
 	rts
 |............................................................................
 

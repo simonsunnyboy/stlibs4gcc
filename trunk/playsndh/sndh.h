@@ -23,6 +23,8 @@
 #ifndef __SNDH_H
 #define __SNDH_H
 
+#include <stdint.h>
+
 typedef struct
 {
 	void *tuneadr;		/* pointer to SNDH in memory      */
@@ -30,12 +32,12 @@ typedef struct
 	char *composer;		/* pointer to COMM in SNDH header */
 	char *ripper;		/* pointer to RIPP in SNDH header */
 	char *conv;		/* pointer to CONV in SNDH header */
-	unsigned short freq;	/* parsed replay frequency        */
+	uint16_t freq;	/* parsed replay frequency        */
 } SNDHTune;
 
 /* function prototypes */
 void SNDH_GetTuneInfo(void *tuneptr, SNDHTune *tune);
-void SNDH_PlayTune(SNDHTune *tune, unsigned short subtunenr);
+void SNDH_PlayTune(SNDHTune *tune, uint16_t subtunenr);
 void SNDH_StopTune(void);
 
 #endif
