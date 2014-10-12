@@ -23,23 +23,24 @@ int main(void)
 	if(tuneptr != 0)
 	{
 	    long handle;
-
+        /* load file into ramdisk */
   	    handle = Fopen ( "heroques.snd", 0 );
         Fseek ( 0,handle, 0 );
         Fread ( handle, 20000, tuneptr);
         Fclose ( handle );
-
+        /* parse SNDH header */
 		SNDH_GetTuneInfo(tuneptr,&mytune);
-
+        /* replay the tune */
 		SNDH_PlayTune(&mytune,0);
-
-
+        /* display some information about the tune */
+        (void)Cconws("\033E");
 		PRINT("TITL: ",mytune.title);
 		PRINT("COMP: ",mytune.composer);
 		PRINT("RIPP: ",mytune.ripper);
 		PRINT("CONV: ",mytune.conv);
 		/*PRINT("FREQ: ",mytune.freq); */
 
+        /* wait for keypress and terminate replay */
 		Cconin();
 		SNDH_StopTune();
 	}

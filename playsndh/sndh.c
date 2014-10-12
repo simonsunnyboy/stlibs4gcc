@@ -22,6 +22,7 @@
  */
 
 #include "sndh.h"
+#include <stdint.h>
 
 #if (!defined NULL)
 #define NULL 0
@@ -31,12 +32,11 @@
 SNDHTune *SNDH_ActiveTune;	/* this is not NULL if a tune has been hookedup for play */
 
 /* prototype of internal functions */
-void 		SNDH_PlayTuneISR(void *tuneptr, unsigned short freq, unsigned short subtune);
+void 		SNDH_PlayTuneISR(void *tuneptr, uint16_t freq, uint16_t subtune);
 void		SNDH_StopTuneISR(void);
 char*		SNDH_FindLongInHeader(char* chunk, char *tag);
 char*		SNDH_FindWordInHeader(char* chunk, char *tag);
-unsigned short	SNDH_ParseDecimal(char *chunk);
-unsigned char	SNDH_IsTunePlaying(void);
+uint16_t	SNDH_ParseDecimal(char *chunk);
 
 /* functions */
 void SNDH_GetTuneInfo(void *tuneptr, SNDHTune *tune)
@@ -95,7 +95,7 @@ void SNDH_GetTuneInfo(void *tuneptr, SNDHTune *tune)
 	return;
 }
 
-void SNDH_PlayTune(SNDHTune *tune, unsigned short subtune)
+void SNDH_PlayTune(SNDHTune *tune, uint16_t subtune)
 {
 	if(tune == NULL)
 	{
@@ -103,7 +103,7 @@ void SNDH_PlayTune(SNDHTune *tune, unsigned short subtune)
 		return;
 	}
 
-	if(SNDH_IsTunePlaying())
+	if(SNDH_ActiveTune != NULL)
 	{
 		SNDH_StopTune();
 	}
@@ -122,14 +122,9 @@ void SNDH_StopTune(void)
 	return;
 }
 
-unsigned char SNDH_IsTunePlaying()
-{
-	return( ((SNDH_ActiveTune == NULL) ? 0 : 1 ));
-}
-
 char* SNDH_FindLongInHeader(char* chunk, char *tag)
 {
-	unsigned short i;
+	uint16_t i;
 
 	for( i=0; i<1024; i++ )
 	{
@@ -147,7 +142,7 @@ char* SNDH_FindLongInHeader(char* chunk, char *tag)
 
 char* SNDH_FindWordInHeader(char* chunk, char *tag)
 {
-	unsigned short i;
+	uint16_t i;
 
 	for( i=0; i<1024; i++ )
 	{
@@ -161,14 +156,14 @@ char* SNDH_FindWordInHeader(char* chunk, char *tag)
 	return( NULL );
 }
 
-unsigned short SNDH_ParseDecimal(char *chunk)
+uint16_t SNDH_ParseDecimal(char *chunk)
 {
-	unsigned short value = 0;
+	uint16_t value = 0;
 
-	while( *chunk )
+	while( *chunk != 0)
 	{
 		value *= 10;
-		value += *chunk++ - '0';
+		value += (*chunk++) - '0';
 	}
 
 	return( value );
