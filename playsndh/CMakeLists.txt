@@ -17,10 +17,14 @@ set(CMAKE_ASM_FLAGS "-m68000 -I${PROJECT_SOURCE_DIR}")
 
 link_directories(${CMAKE_SOURCE_DIR})
 
+include_directories (
+	src/
+)
+
 add_library(sndh
- sndh.c
- sndh.h
- sndhisr.S
+ src/sndh.c
+ src/sndh.h
+ src/sndhisr.S
 )
 
 add_executable(playsndh.tos
