@@ -1,0 +1,1 @@
+Atari ST libraries for use with GCC, collected by Paradize http://paradize.atari.org/
