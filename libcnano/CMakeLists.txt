@@ -14,12 +14,30 @@ set(CMAKE_RANLIB m68k-atari-mint-ranlib)
 set(CMAKE_C_FLAGS "-m68000 -O3 -fomit-frame-pointer -Wall -mshort -nostdlib -std=c99")
 set(CMAKE_ASM_FLAGS "-m68000 -I${PROJECT_SOURCE_DIR}")
 
-link_directories(${CMAKE_SOURCE_DIR})
+# linker flags to compile excutables
+set(CMAKE_EXE_LINKER_FLAGS  "${CMAKE_C_FLAGS} ${PROJECT_SOURCE_DIR}/test/startup.S" )
 
+
+link_directories(${CMAKE_SOURCE_DIR})
+link_directories(test)
+
+include_directories(
+	src/
+	test/
+)
+
+# the cnano library itself
 add_library(cnano
 	src/libcnano.h
 	src/MemCpy32.c
 	src/StrCpy.c
 	src/StrLeft.c
 )
+
+# test program for basic file access functions
+add_executable( file.tos
+	test/test_filefunc.c
+)
+
+target_link_libraries(file.tos cnano)
 
