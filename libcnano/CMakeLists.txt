@@ -32,6 +32,8 @@ add_library(cnano
 	src/MemCpy32.c
 	src/StrCpy.c
 	src/StrLeft.c
+	src/FileExists.c
+	src/FileLength.c
 )
 
 # test program for basic file access functions

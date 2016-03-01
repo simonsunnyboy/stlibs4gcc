@@ -1,7 +1,7 @@
 /**
  * libcnano for Atari ST
- * @file test_filefunc.c
- * @brief test program for TOS file access functions
+ * @file FileLength.c
+ * @brief implementation of FileLength() and FileLengthName()
  * @copyright (c) 2016 Matthias Arndt <marndt@asmsoftware.de>
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -22,77 +22,56 @@
  *
  */
 
-#include <osbind.h>
 #include <stdint.h>
+#include <stdbool.h>
+#include <osbind.h>
 
 #include "libcnano.h"
 
-void Print(const char *str)
+/**
+ * @brief   returns length of file given by filename
+ * @returns length in bytes OR negative GEMDOS error code
+ */
+int32_t FileLengthName(const char *fname)
 {
-	(void)Cconws(str);
-	return;
-}
+	int32_t handle;
+	int32_t length;
 
-int main(void)
-{
-	Print("\033E"__FILE__ " " __DATE__ "\r\n\n");
+	handle = Fopen(fname, 0);
 
-	Print("Testcases FileExists()\r\n");
-
-	if(FileExists("FILE.TOS") != true)
+	if(handle)
 	{
-		Print("ERROR FileExists 1\r\n");
-	}
-	if(FileExists("UNKNOWN") != false)
-	{
-		Print("ERROR FileExists 2\r\n");
-	}
-
-	Print("Testcases FileLengthName()\r\n");
-
-	int32_t filelen = FileLengthName("FILE.TOS");
-
-	if(filelen < 0)
-	{
-		Print("ERROR FileLengthName 1\r\n");
-
-	}
-
-	if(FileLengthName("UNKNOWN"))
-	{
-		Print("ERROR FileLengthName 2\r\n");
-	}
-
-
-	Print("Testcases FileLength()\r\n");
-
-	int32_t myhandle = Fopen("File.tos",0);
-	if(myhandle < 0)
-	{
-			Print("ERROR FileLength Fopen failed\r\n");
-
+		length = Fseek( 0, handle, 2);  // final byte of file
+		Fclose(handle);  // close file
 	}
 	else
 	{
-		int32_t length;
-
-		Fseek(15, myhandle, 0);  // move into file
-		length = FileLength(myhandle); // get length
-		if(length < 0)
-		{
-			Print("ERROR FileLength 2\r\n");
-		}
-
-		if(Fseek(0, myhandle, 1) != 15)
-		{
-			Print("ERROR FileLength 3\r\n");
-		}
-
-		Fclose(myhandle);
+		length = handle; // GEMDOS error
 	}
 
+	return length;
+}
 
 
-	Bconin(2);
-	return 0;
+int32_t FileLength(const int32_t handle)
+{
+
+	int32_t length;
+
+	if(handle < 0)
+	{
+		length = handle;  // GEMDOS error
+	}
+	else
+	{
+		int32_t offset;
+
+		offset = Fseek(0, handle, 1); // get actual position in file
+		length = Fseek(0, handle, 2);  // final byte of file
+
+		Fseek(offset, handle, 0); // set handle positon back to given position, allow seek accesses together with reading the file name
+
+	}
+
+	return length;
 }
