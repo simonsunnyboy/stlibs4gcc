@@ -41,5 +41,4 @@ add_executable( file.tos
 	test/test_filefunc.c
 )
 
-target_link_libraries(file.tos cnano)
-
+target_link_libraries(file.tos cnano -lgcc)

@@ -27,6 +27,32 @@
 
 #include "libcnano.h"
 
+#define INT_DIGITS 19		/* enough for 64 bit integer */
+
+char *myitoa(int32_t i)
+{
+  /* Room for INT_DIGITS digits, - and '\0' */
+  static char buf[INT_DIGITS + 2];
+  char *p = buf + INT_DIGITS + 1;	/* points to terminating '\0' */
+
+  if (i >= 0) {
+    do {
+      *--p = '0' + (i % 10);
+      i /= 10;
+    } while (i != 0);
+    return p;
+  }
+  else {			/* i < 0 */
+    do {
+      *--p = '0' - (i % 10);
+      i /= 10;
+    } while (i != 0);
+    *--p = '-';
+  }
+  return p;
+}
+
+
 void Print(const char *str)
 {
 	(void)Cconws(str);
@@ -55,14 +81,20 @@ int main(void)
 	if(filelen < 0)
 	{
 		Print("ERROR FileLengthName 1\r\n");
-
+	}
+	else
+	{
+		Print(".. file length in bytes:");
+		Print(myitoa(filelen));
+		//Print(myitoa(54321));
+		Print("\r\n");
 	}
 
 	if(FileLengthName("UNKNOWN"))
 	{
 		Print("ERROR FileLengthName 2\r\n");
 	}
-
+	Print("...\r\n");
 
 	Print("Testcases FileLength()\r\n");
 
