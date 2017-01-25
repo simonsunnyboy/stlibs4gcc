@@ -2,7 +2,7 @@
  * libcnano for Atari ST
  * @file libcnano.h
  * @brief common library header defining all available functions
- * @copyright (c) 2014/2016 Matthias Arndt <marndt@asmsoftware.de>
+ * @copyright (c) 2014/2016/2017 Matthias Arndt <marndt@asmsoftware.de>
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -28,6 +28,10 @@
 	#include <stdbool.h>
 	#include <stdint.h>
 
+    #ifndef NULL
+        #define NULL ((char *)0)  /* NULL definition if missing */
+    #endif // NULL
+
 	/* memory copy functions */
 	void MemCpy32(void * src, void * dest, uint32_t len);
 
@@ -36,6 +40,7 @@
 	bool StrMid(char * src, uint32_t start_pos, char * match);
 	void StrCpy(char * src,  char * dest);
 	void StrMidCpy(char * dest, uint32_t start_pos, char * src);
+    int32_t StrNcmp(char * str1, char * str2, int32_t limit);
 
 	/* File handling functions */
 	bool FileExists(const char * fname);

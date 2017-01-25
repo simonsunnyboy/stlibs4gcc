@@ -31,6 +31,7 @@ add_library(cnano
 	src/libcnano.h
 	src/MemCpy32.c
 	src/StrCpy.c
+    src/StrCmp.c
 	src/StrLeft.c
 	src/FileExists.c
 	src/FileLength.c

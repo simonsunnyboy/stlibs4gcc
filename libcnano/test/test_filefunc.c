@@ -112,19 +112,19 @@ int main(void)
 		length = FileLength(myhandle); // get length
 		if(length < 0)
 		{
-			Print("ERROR FileLength 2\r\n");
+            Print("ERROR FileLength 2, invalid file length\r\n");
 		}
 
 		if(Fseek(0, myhandle, 1) != 15)
 		{
-			Print("ERROR FileLength 3\r\n");
+            Print("ERROR FileLength 3, seek position\r\n");
 		}
 
 		Fclose(myhandle);
 	}
 
 
-
+    Print(" -- press any key to continue");
 	Bconin(2);
 	return 0;
 }
