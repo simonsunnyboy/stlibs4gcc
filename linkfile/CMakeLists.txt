@@ -24,6 +24,8 @@ include_directories (
 add_library(linkfile
  src/linkfile.c
  src/linkfile.h
+ .gitignore
+ README.md
 )
 
 add_executable(linkfile.tos
