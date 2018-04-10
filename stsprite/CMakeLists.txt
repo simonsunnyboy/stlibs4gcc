@@ -18,7 +18,7 @@ set(CMAKE_ASM_COMPILER m68k-atari-mint-as)
 set(CMAKE_AR m68k-atari-mint-ar)
 set(CMAKE_RANLIB m68k-atari-mint-ranlib)
 set(CMAKE_C_FLAGS "-m68000 -O3 -fomit-frame-pointer -Wextra -Wall -mshort -nostdlib -std=c99")
-set(CMAKE_EXE_LINKER_FLAGS  "${CMAKE_C_FLAGS} startup.S" )
+set(CMAKE_EXE_LINKER_FLAGS  "${CMAKE_C_FLAGS} ${PROJECT_SOURCE_DIR}/startup.S" )
 
 # include directories for assembly sources
 set(CMAKE_ASM_FLAGS "-m68000 -I${SPRITE_SRC}")
@@ -26,7 +26,7 @@ set(CMAKE_ASM_FLAGS "-m68000 -I${SPRITE_SRC}")
 include_directories(${SPRITE_SRC})
 
 # compile seperate library
-add_directory(src)
+add_subdirectory(src)
 
 # test program
 add_executable(stsprite.tos
@@ -35,4 +35,4 @@ add_executable(stsprite.tos
 	LICENSE
 )
 
-target_link_libraries(stsprite.tos eswkernel4st)
+target_link_libraries(stsprite.tos stsprite)
