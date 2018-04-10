@@ -183,7 +183,7 @@ draw_4bplsprite:
 
 yloop:
 
-xloop:              moveq   #0xFF,D0         | prepare for maskshifting.
+xloop:              moveq   #-1,D0         | prepare for maskshifting.
 					move.w  (A0)+,D0        | get 16pixel maskdata in d0.w.
 					addq.l  #6,A0           | skip 3 planes
 					ror.l   D2,D0           | shift it!
@@ -243,10 +243,10 @@ draw_4bplsprite_blitter:
 					mulu    #160,D1         |eek! mulu!!!
                     move.w  D0,D2
                     lsr.w   #1,D2
-					and.w   #~%111,D2       |(x/16)*8
+					andi.w  #0xfff8,D2       |(x/16)*8
 					add.w   D2,D1           |dest offset
 					lea     0(A2,D1.w),A2   |a2=dest address
-					moveq   #0xFF,D2
+					moveq   #-1,D2
                     move.w  D2,endmask2(A5)
                     and.b   #15,D0
                     lsr.w   D0,D2
@@ -331,10 +331,10 @@ draw_4bplsprite_hog:
 					mulu    #160,D1         |eek! mulu!!!
                     move.w  D0,D2
                     lsr.w   #1,D2
-					and.w   #~%111,D2       |(x/16)*8
+					andi.w  #0xfff8,D2       |(x/16)*8
 					add.w   D2,D1           |dest offset
 					lea     0(A2,D1.w),A2   |a2=dest address
-					moveq   #0xFF,D2
+					moveq   #-1,D2
                     move.w  D2,endmask2(A5)
                     and.b   #15,D0
                     lsr.w   D0,D2
