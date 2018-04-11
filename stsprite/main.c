@@ -1,6 +1,8 @@
 #include <stdint.h>
 #include <osbind.h>
 
+#include "stsprite.h"
+
 int main(void)
 {
 	(*(uint16_t *)0xFFFF8240) = 0x31; // we are in Supervisor so this should work

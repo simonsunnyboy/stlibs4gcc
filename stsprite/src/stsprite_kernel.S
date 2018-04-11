@@ -71,7 +71,82 @@
 
 .equ blitter,0xFFFF8A00
 
+.globl _STSprite_HandleDrawing
+.globl _STSprite_DrawCPU
+.globl _STSprite_DrawBlitter
+.globl _STSprite_DrawBlitterHog
+.globl _STSprite_SetBlitterMode
+.globl _STSprite_SetLogbase
+
 .text
+
+_STSprite_HandleDrawing:
+	move.l 4(sp),spritelist
+	move.w 8(sp),nr_sprites
+	bra spritekernel
+
+_STSprite_DrawCPU:
+	link a6,#0
+	movem.l D2-D7/A2-A5,-(sp)
+	movea.l 8(a6),a6	| convert pointer from stack to register and
+
+	move.w  x(A6),D0        | load sprite parameters
+	move.w  y(A6),D1
+	move.w  width(A6),D6
+	move.w  height(A6),D7
+	movea.l maskptr(A6),A0
+	movea.l sprptr(A6),A1
+	move.l logbase, A2
+
+	bsr draw_4bplsprite
+	movem.l (SP)+,D2-D7/A2-A5
+	unlk a6
+	rts
+
+_STSprite_DrawBlitter:
+	link a6,#0
+	movem.l D2-D7/A2-A5,-(sp)
+	movea.l 8(a6),a6	| convert pointer from stack to register and
+
+	move.w  x(A6),D0        | load sprite parameters
+	move.w  y(A6),D1
+	move.w  width(A6),D6
+	move.w  height(A6),D7
+	movea.l maskptr(A6),A0
+	movea.l sprptr(A6),A1
+	move.l logbase, A2
+
+	bsr draw_4bplsprite_blitter
+	movem.l (SP)+,D2-D7/A2-A5
+	unlk a6
+	rts
+
+_STSprite_DrawBlitterHog:
+	link a6,#0
+	movem.l D2-D7/A2-A5,-(sp)
+	movea.l 8(a6),a6	| convert pointer from stack to register and
+
+	move.w  x(A6),D0        | load sprite parameters
+	move.w  y(A6),D1
+	move.w  width(A6),D6
+	move.w  height(A6),D7
+	movea.l maskptr(A6),A0
+	movea.l sprptr(A6),A1
+	move.l logbase, A2
+
+	bsr draw_4bplsprite_hog
+	movem.l (SP)+,D2-D7/A2-A5
+	unlk a6
+	rts
+
+_STSprite_SetBlitterMode:
+	move.w 4(sp),use_blitter
+	rts
+
+_STSprite_SetLogbase:
+	move.l 4(sp),logbase
+	rts
+
 
 | jump table
 entry:              bra     spritekernel    | +0 draw sprites
@@ -82,7 +157,9 @@ entry:              bra     spritekernel    | +0 draw sprites
 spritelist:         DC.L 0      | +12 pointer to sprite records
 logbase:            DC.L 0      | +16 pointer to screen
 use_blitter:        DC.W 0      | +20 flag to indicate: draw sprite with Blitter
-					DC.L 0,0,0,0,0,0,0,0 | space for future additions
+nr_sprites:         DC.W 16     | +22 number of sprites to draw
+					DC.W 0
+					DC.L 0,0,0,0,0,0,0 | space for future additions
 					.even
 					DC.B "STFM Sprite Kernel by Paradize v1.00 (gcc version)",0
 					.even
@@ -105,7 +182,8 @@ use_shared_mode:
                     lea     draw_4bplsprite_blitter(PC),A6
 continue_kernel:
 
-					move.w  #numbersprites-1,D3 | loop counter
+					move.w  nrsprites(PC),D3 | loop counter
+					subq.w #1,D3
 
 					movea.l logbase(PC),A2    | load logbase to use
 					movea.l spritelist(PC),A5 | start of sprite records
@@ -243,7 +321,7 @@ draw_4bplsprite_blitter:
 					mulu    #160,D1         |eek! mulu!!!
                     move.w  D0,D2
                     lsr.w   #1,D2
-					andi.w  #0xfff8,D2       |(x/16)*8
+					andi.w  #~0b111,D2       |(x/16)*8
 					add.w   D2,D1           |dest offset
 					lea     0(A2,D1.w),A2   |a2=dest address
 					moveq   #-1,D2
@@ -331,7 +409,7 @@ draw_4bplsprite_hog:
 					mulu    #160,D1         |eek! mulu!!!
                     move.w  D0,D2
                     lsr.w   #1,D2
-					andi.w  #0xfff8,D2       |(x/16)*8
+					andi.w  #~0b111,D2       |(x/16)*8
 					add.w   D2,D1           |dest offset
 					lea     0(A2,D1.w),A2   |a2=dest address
 					moveq   #-1,D2
