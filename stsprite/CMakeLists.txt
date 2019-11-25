@@ -20,8 +20,10 @@ set(CMAKE_RANLIB m68k-atari-mint-ranlib)
 set(CMAKE_C_FLAGS "-m68000 -O3 -fomit-frame-pointer -Wextra -Wall -mshort -nostdlib -std=c99")
 set(CMAKE_EXE_LINKER_FLAGS  "${CMAKE_C_FLAGS} ${PROJECT_SOURCE_DIR}/startup.S" )
 
+# GNU as configuration
+set(CMAKE_ASM_FLAGS_RELEASE "")
 # include directories for assembly sources
-set(CMAKE_ASM_FLAGS "-m68000 -I${SPRITE_SRC}")
+set(CMAKE_ASM_FLAGS "-m68000 -I${SPRITE_SRC} -I${PROJECT_SOURCE_DIR}")
 
 include_directories(${SPRITE_SRC})
 
@@ -31,6 +33,7 @@ add_subdirectory(src)
 # test program
 add_executable(stsprite.tos
 	main.c
+	data.S
 	README.md
 	LICENSE
 )
