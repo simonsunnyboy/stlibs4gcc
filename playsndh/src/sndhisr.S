@@ -1,6 +1,6 @@
 |
-|	SNDH player lib for AHCC
-|	(c) 2010/2014 by Simon Sunnyboy / Paradize <marndt@asmsoftware.de>
+|	SNDH player lib for GCC
+|	(c) 2010/2014/2019 by Simon Sunnyboy / Paradize <marndt@asmsoftware.de>
 |	http://paradize.atari.org/
 |
 |	lowlevel SNDH player library routines for hooking into Timer C
@@ -21,6 +21,8 @@
 |	Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307  USA
 |
 |
+|   ATTENTION: These functions use the classic stack conventions. The file
+|              must be assembled and linked with -mshort compiler options.
 
 	.global _SNDH_PlayTuneISR
 	.global _SNDH_StopTuneISR
@@ -53,7 +55,7 @@ _SNDH_PlayTuneISR:
 _SNDH_StopTuneISR:
 	move.l	oldtc(pc),0x114.w	|restore timer c
 	move.l	sndhpoi(pc),a0
-	jsr	4(a0) 			|sndh deinit
+	jsr	4(a0) 			        |sndh deinit
 	move.b	oldcon(pc),0x484.w	|restore key click
 	rts
 
@@ -70,7 +72,7 @@ dosndh:
 	move.w	sr,-(sp)		|store status reg
 	move.w	#0x2300,sr		|enable interrupts
 	move.l	sndhpoi(pc),a0
-	jsr	8(a0) 			|call sndh interrupt routine
+	jsr	8(a0) 			    |call sndh interrupt routine
 	move.w	(sp)+,sr		|restore status register
 
 

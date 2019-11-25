@@ -1,10 +1,14 @@
-/*
- *	SNDH player lib for AHCC
- *	(c) 2010 by Simon Sunnyboy / Paradize <marndt@asmsoftware.de>
+/**
+ *  @file sndh.h
+ *
+ *	SNDH player lib for GCC
+ *
+ *	@author (c) 2010/2014/2019 by Simon Sunnyboy / Paradize <marndt@asmsoftware.de>
  *	http://paradize.atari.org/
  *
- *	header for SNDH player lib
+ *	@brief   header for SNDH player lib
  *
+ *  @copyright
  *	This library is free software; you can redistribute it and/or
  *	modify it under the terms of the GNU Lesser General Public
  *	License as published by the Free Software Foundation; either
@@ -20,25 +24,34 @@
  *	Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307  USA
  */
 
+/** @addtogroup SNDH
+ *  @{
+ */
+
 #ifndef __SNDH_H
 #define __SNDH_H
 
 #include <stdint.h>
 
+/**
+ * @brief SNDH tune object
+ */
 typedef struct
 {
-	void *tuneadr;		/* pointer to SNDH in memory      */
-	char *title;		/* pointer to TITL in SNDH header */
-	char *composer;		/* pointer to COMM in SNDH header */
-	char *ripper;		/* pointer to RIPP in SNDH header */
-	char *conv;		/* pointer to CONV in SNDH header */
-	uint16_t freq;	/* parsed replay frequency        */
+	void *tuneadr;		/**< pointer to unpacked SNDH in memory */
+	char *title;		/**< pointer to TITL in SNDH header     */
+	char *composer;		/**< pointer to COMM in SNDH header     */
+	char *ripper;		/**< pointer to RIPP in SNDH header     */
+	char *conv;		    /**< pointer to CONV in SNDH header     */
+	uint16_t freq;	    /**< parsed replay frequency            */
 } SNDHTune;
 
 /* function prototypes */
-void SNDH_GetTuneInfo(void *tuneptr, SNDHTune *tune);
-void SNDH_PlayTune(SNDHTune *tune, uint16_t subtunenr);
-void SNDH_StopTune(void);
+void SNDH_GetTuneInfo ( void *sndhdata, SNDHTune *tune_handle );
+void SNDH_PlayTune ( SNDHTune *tune_handle, uint16_t nr_subtune );
+void SNDH_StopTune ( void );
 
 #endif
+
+/** @} */
 
