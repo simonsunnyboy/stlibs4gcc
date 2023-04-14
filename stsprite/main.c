@@ -39,8 +39,9 @@ int main ( void )
 	for ( uint16_t frames = 0; frames < 200; frames ++ )
 	{
 		Vsync();
-		STSprite_DrawCPU ( &spr[0] );
-		/*STSprite_HandleDrawing(&spr[0], NR_SPRITES); */
+		/*STSprite_DrawCPU ( &spr[0] ); */
+		STSprite_HandleDrawing(&spr[0], NR_SPRITES);
+		spr[frames % NR_SPRITES].x++;
 	}
 
 	Cconin();

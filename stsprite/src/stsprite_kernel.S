@@ -161,7 +161,7 @@ nr_sprites:         DC.W 16     | +22 number of sprites to draw
 					DC.W 0
 					DC.L 0,0,0,0,0,0,0 | space for future additions
 					.even
-					DC.B "STFM Sprite Kernel by Paradize v1.00 (gcc version)",0
+					.asciz "STFM Sprite Kernel by Paradize v1.00 (gcc version)"
 					.even
 spritekernel:
                     movem.l D0-A6,-(SP)
@@ -182,7 +182,7 @@ use_shared_mode:
                     lea     draw_4bplsprite_blitter(PC),A6
 continue_kernel:
 
-					move.w  nrsprites(PC),D3 | loop counter
+					move.w  nr_sprites(PC),D3 | loop counter
 					subq.w #1,D3
 
 					movea.l logbase(PC),A2    | load logbase to use
