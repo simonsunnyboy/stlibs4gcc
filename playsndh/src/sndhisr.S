@@ -32,7 +32,7 @@
 | *** initialize Timer C to replay the given SNDH ***
 | parameters:  a0  ptr to SNDH  d0.w replay frequency      d1.w subtune to play
 _SNDH_PlayTuneISR:
-    link a6,#0
+    link a6,#0                  | do not change a6 until unlk to avoid crashes
 	lea	sndhpoi(pc),a0
 	move.l	8(a6),(a0)+	  	    | start of sndh
 	move.w	12(a6),(a0)+ 		| replay freq

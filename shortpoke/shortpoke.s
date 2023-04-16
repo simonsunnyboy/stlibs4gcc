@@ -2,7 +2,7 @@
 .globl _short_poke
 
 _short_poke:
-	link a6,#0
+	link a6,#0             | do not change a6 until unlk to avoid crashes
 	move.l a0,-(sp)
 	
 	move.l 10(a6),a0       | fetch pointer
