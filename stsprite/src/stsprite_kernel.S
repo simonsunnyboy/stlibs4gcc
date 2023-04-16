@@ -15,6 +15,7 @@
 | Version 0.99  06.06.2008 (beta version with support for Blitter)
 | Version 1.00  25.02.2009 (first release version - Halftone mode bugfix)
 |               10.04.2018 (gcc port)
+| Version 1.01  16.04.2023 (bugfix C stack access for STSprite_Draw.... functions)
 |
 | Draws up to 16 sprites with different sizes on screen
 |
@@ -86,10 +87,9 @@ _STSprite_HandleDrawing:
 	bra spritekernel
 
 _STSprite_DrawCPU:
-	link a6,#0
+	move.l a6,-(sp)	
+	movea.l 8(sp),a6	    | get pointer from stack to register and
 	movem.l D2-D7/A2-A5,-(sp)
-	movea.l 8(a6),a6	| convert pointer from stack to register and
-
 	move.w  x(A6),D0        | load sprite parameters
 	move.w  y(A6),D1
 	move.w  width(A6),D6
@@ -100,13 +100,13 @@ _STSprite_DrawCPU:
 
 	bsr draw_4bplsprite
 	movem.l (SP)+,D2-D7/A2-A5
-	unlk a6
+	move.l (SP)+,a6
 	rts
 
 _STSprite_DrawBlitter:
-	link a6,#0
+	move.l a6,-(sp)	
+	movea.l 8(sp),a6	    | get pointer from stack to register and
 	movem.l D2-D7/A2-A5,-(sp)
-	movea.l 8(a6),a6	| convert pointer from stack to register and
 
 	move.w  x(A6),D0        | load sprite parameters
 	move.w  y(A6),D1
@@ -118,13 +118,13 @@ _STSprite_DrawBlitter:
 
 	bsr draw_4bplsprite_blitter
 	movem.l (SP)+,D2-D7/A2-A5
-	unlk a6
+	move.l (SP)+,a6
 	rts
 
 _STSprite_DrawBlitterHog:
-	link a6,#0
+	move.l a6,-(sp)	
+	movea.l 8(sp),a6	    | get pointer from stack to register and
 	movem.l D2-D7/A2-A5,-(sp)
-	movea.l 8(a6),a6	| convert pointer from stack to register and
 
 	move.w  x(A6),D0        | load sprite parameters
 	move.w  y(A6),D1
@@ -136,7 +136,7 @@ _STSprite_DrawBlitterHog:
 
 	bsr draw_4bplsprite_hog
 	movem.l (SP)+,D2-D7/A2-A5
-	unlk a6
+	move.l (SP)+,a6
 	rts
 
 _STSprite_SetBlitterMode:
@@ -161,7 +161,7 @@ nr_sprites:         DC.W 16     | +22 number of sprites to draw
 					DC.W 0
 					DC.L 0,0,0,0,0,0,0 | space for future additions
 					.even
-					.asciz "STFM Sprite Kernel by Paradize v1.00 (gcc version)"
+					.asciz "STFM Sprite Kernel by Paradize v1.01 (gcc version)"
 					.even
 spritekernel:
                     movem.l D0-A6,-(SP)
