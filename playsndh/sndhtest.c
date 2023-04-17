@@ -1,6 +1,6 @@
 /**
  *	SNDH player lib for GCC
- *	(c) 2010/2014/2019 by Simon Sunnyboy / Paradize <marndt@asmsoftware.de>
+ *	(c) 2010/2014/2019/2023 by Simon Sunnyboy / Paradize <marndt@asmsoftware.de>
  *	http://paradize.atari.org/
  *
  *	SNDH player library routines
@@ -25,12 +25,23 @@
 #include <osbind.h>
 #include "sndh.h"
 
+#if (!defined NULL)
+#define NULL 0
+#endif
+
 uint8_t ramdisk[20000];
 
 static void PRINT ( const char *str1, const char *str2 )
 {
 	( void ) Cconws ( str1 );
-	( void ) Cconws ( str2 );
+    if ( str2 != NULL )
+    {
+	    ( void ) Cconws ( str2 );
+    }
+    else
+    {
+        ( void ) Cconws ( "undefined" );
+    }
 	( void ) Cconws ( "\r\n" );
 	return;
 }
@@ -41,27 +52,41 @@ int main ( void )
     void* tuneptr;
     tuneptr = &ramdisk[0];
 
-    if ( tuneptr != 0 )
+    if ( tuneptr != NULL )
     {
         long handle;
+
+        ( void ) Cconws ( "\033E" );
+
         /* load file into ramdisk
          * NOTE: The SNDH must be unpacked!
          */
         handle = Fopen ( "heroques.snd", 0 );
-        Fseek ( 0,handle, 0 );
-        Fread ( handle, 20000, tuneptr );
-        Fclose ( handle );
-        /* parse SNDH header */
-        SNDH_GetTuneInfo ( tuneptr,&mytune );
-        /* replay the first tune */
-        SNDH_PlayTune ( &mytune,0 );
-        /* display some information about the tune */
-        ( void ) Cconws ( "\033E" );
-        PRINT ( "TITL: ",mytune.title );
-        PRINT ( "COMP: ",mytune.composer );
-        PRINT ( "RIPP: ",mytune.ripper );
-        PRINT ( "CONV: ",mytune.conv );
 
+        if(handle < 0)
+        {
+            ( void ) Cconws ( "ERROR: SNDH file not found!\r\n" );
+        }
+        else
+        {
+            /* fiel found, read tune into RAM and play ...*/
+            Fseek ( 0,handle, 0 );
+            Fread ( handle, 20000, tuneptr );
+            
+            /* parse SNDH header */
+            SNDH_GetTuneInfo ( tuneptr,&mytune );
+            /* replay the first tune */
+            SNDH_PlayTune ( &mytune,0 );
+            /* display some information about the tune */
+            
+            PRINT ( "TITL: ",mytune.title );
+            PRINT ( "COMP: ",mytune.composer );
+            PRINT ( "RIPP: ",mytune.ripper );
+            PRINT ( "CONV: ",mytune.conv );
+
+
+        }
+        Fclose ( handle );
         /* wait for keypress and terminate replay */
         Cconin();
         SNDH_StopTune();

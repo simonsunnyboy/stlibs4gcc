@@ -1,6 +1,6 @@
 |
 |	SNDH player lib for GCC
-|	(c) 2010/2014/2019 by Simon Sunnyboy / Paradize <marndt@asmsoftware.de>
+|	(c) 2010/2014/2019/2023 by Simon Sunnyboy / Paradize <marndt@asmsoftware.de>
 |	http://paradize.atari.org/
 |
 |	lowlevel SNDH player library routines for hooking into Timer C
@@ -30,6 +30,7 @@
 	.text
 
 | *** initialize Timer C to replay the given SNDH ***
+| access only from SNDH_PlayTune()
 | parameters:  a0  ptr to SNDH  d0.w replay frequency      d1.w subtune to play
 _SNDH_PlayTuneISR:
     link a6,#0                  | do not change a6 until unlk to avoid crashes
@@ -52,6 +53,7 @@ _SNDH_PlayTuneISR:
     rts
 
 | *** stop current active SNDH replay ISR ***
+| access only from SNDH_StopTune()
 _SNDH_StopTuneISR:
 	move.l	oldtc(pc),0x114.w	|restore timer c
 	move.l	sndhpoi(pc),a0

@@ -3,7 +3,7 @@
  *
  *	SNDH player lib for GCC
  *
- *	@author (c) 2010/2014/2019 by Simon Sunnyboy / Paradize <marndt@asmsoftware.de>
+ *	@author (c) 2010/2014/2019/2023 by Simon Sunnyboy / Paradize <marndt@asmsoftware.de>
  *	http://paradize.atari.org/
  *
  *	@brief   header for SNDH player lib
@@ -32,6 +32,7 @@
 #define __SNDH_H
 
 #include <stdint.h>
+#include <stdbool.h>
 
 /**
  * @brief SNDH tune object
@@ -50,6 +51,7 @@ typedef struct
 void SNDH_GetTuneInfo ( void *sndhdata, SNDHTune *tune_handle );
 void SNDH_PlayTune ( SNDHTune *tune_handle, uint16_t nr_subtune );
 void SNDH_StopTune ( void );
+bool SNDH_IsPlaying( void );
 
 #endif
 

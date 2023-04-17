@@ -3,7 +3,7 @@
  *
  *	SNDH player lib for GCC
  *
- *	@author (c) 2010/2014/2019 by Simon Sunnyboy / Paradize <marndt@asmsoftware.de>
+ *	@author (c) 2010/2014/2019/2023 by Simon Sunnyboy / Paradize <marndt@asmsoftware.de>
  *	http://paradize.atari.org/
  *
  *	@brief   highlevel SNDH player library routines
@@ -73,10 +73,17 @@ void SNDH_GetTuneInfo ( void *sndhdata, SNDHTune *tune_handle )
 {
 	char *parser, *freqtag;
 
-	/* assert valid SNDH tune */
+	/* assert valid SNDH tune and handle*/
+	if ( tune_handle == NULL )
+	{
+		return;
+	}
+
+	/* ensure handle points to invalid tune data in case of bogus data pointer */
 	if ( sndhdata == NULL )
 	{
-		tune_handle = NULL;
+		tune_handle->tuneadr = NULL;  
+		tune_handle->freq = 0;      
 		return;
 	}
 
@@ -122,10 +129,19 @@ void SNDH_GetTuneInfo ( void *sndhdata, SNDHTune *tune_handle )
 	}
 	else
 	{
-		tune_handle = NULL;
+		tune_handle->tuneadr = NULL;  
+		tune_handle->freq = 0;
 	}
 
 	return;
+}
+
+/**
+ * @brief checks if an SNDH tune is playing
+ */
+bool SNDH_IsPlaying( void )
+{
+	return ( SNDH_ActiveTune != NULL );
 }
 
 /**
@@ -136,35 +152,33 @@ void SNDH_GetTuneInfo ( void *sndhdata, SNDHTune *tune_handle )
  */
 void SNDH_PlayTune ( SNDHTune *tune_handle, uint16_t nr_subtune )
 {
-	if ( tune_handle == NULL )
-	{
-		/* tune is not valid */
-		return;
-	}
-
-	/* stop any already playing tune */
-	if ( SNDH_ActiveTune != NULL )
-	{
+	if ( tune_handle != NULL )
+	{		
+		/* stop any already playing tune */
 		SNDH_StopTune();
-	}
 
-	/* start playing if valid data is provided */
-	if ( ( tune_handle->tuneadr != NULL ) && ( tune_handle->freq > 0 ) )
-	{
-		SNDH_ActiveTune = tune_handle;
-		SNDH_PlayTuneISR ( tune_handle->tuneadr, tune_handle->freq, nr_subtune );
+		/* start playing if valid data is provided */
+		if ( ( tune_handle->tuneadr != NULL ) && ( tune_handle->freq > 0 ) )
+		{
+			SNDH_ActiveTune = tune_handle;
+			SNDH_PlayTuneISR ( tune_handle->tuneadr, tune_handle->freq, nr_subtune );
+		}
 	}
 
 	return;
 }
 
 /**
- * @brief stop any playing SNDH tune
+ * @brief   stop any playing SNDH tune
+ * @details The function may be invoked if there is no tune playing.
  */
 void SNDH_StopTune ( void )
 {
-	SNDH_ActiveTune = NULL;
-	SNDH_StopTuneISR();
+	if ( SNDH_IsPlaying() == true )
+	{
+		SNDH_ActiveTune = NULL;
+		SNDH_StopTuneISR();
+	}
 	return;
 }
 
