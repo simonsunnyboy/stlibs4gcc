@@ -1,6 +1,6 @@
 /*
  *	Linkfile support for C
- *	(c) 2017 by Simon Sunnyboy / Paradize <marndt@asmsoftware.de>
+ *	(c) 2017/2023 by Simon Sunnyboy / Paradize <marndt@asmsoftware.de>
  *	http://paradize.atari.org/
  *
  *	access to data linkfiles by "GFA Linkfile by MUG U.K¿"
@@ -205,7 +205,7 @@ bool Linkfile_AllocateInRAM(linkfile_t * link)
 void Linkfile_ToRAM(linkfile_t * link)
 {
     /* successful transfer to ramdisk sets in_ram flag for Linkfile_Get() */
-    if((link->ramdisk == NULL)&&(link->nr_files > 0))
+    if((link->ramdisk != NULL)&&(link->nr_files > 0))
     {
         int32_t handle;
 
