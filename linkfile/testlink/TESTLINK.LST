@@ -1,0 +1,23 @@
+'
+' ************************************************
+' * GFA Linkfile by MUG U.K¿ v2.4 - January 1996 *
+' ************************************************
+'
+PROCEDURE init_link
+total_files|=3
+link_length%=64320
+link_name$="C:\TESTLINK.LNK"
+DIM offset%(total_files|),file_lens%(total_files|)
+RESTORE offset_list
+FOR link_loop|=1 TO total_files|
+READ offset%(link_loop|),file_lens%(link_loop|)
+NEXT link_loop|
+'
+offset_list:
+! C:\ANIME1.NEO
+DATA 0,32128
+! C:\ANIME2.NEO
+DATA 32128,32128
+! C:\MESSAGE.TXT
+DATA 64256,24
+RETURN
