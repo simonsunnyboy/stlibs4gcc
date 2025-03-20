@@ -1,8 +1,8 @@
 /**
- * libcnano for Atari ST
+ * libtosext for Atari ST
  * @file test_filefunc.c
  * @brief test program for TOS file access functions
- * @copyright (c) 2016 Matthias Arndt <marndt@asmsoftware.de>
+ * @copyright (c) 2016/2025 Matthias Arndt <marndt@final-memory.org>
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -25,7 +25,7 @@
 #include <osbind.h>
 #include <stdint.h>
 
-#include "libcnano.h"
+#include "libtosext.h"
 
 #define INT_DIGITS 19		/* enough for 64 bit integer */
 

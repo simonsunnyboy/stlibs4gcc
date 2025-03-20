@@ -1,7 +1,7 @@
 /**
  * libtosext for Atari ST
- * @file FileExists.c
- * @brief implementation of FileExists()
+ * @file libtosext.h
+ * @brief common library header defining all available functions for libtosext
  * @copyright (c) 2016/2025 Matthias Arndt <marndt@final-memory.org>
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -22,27 +22,36 @@
  *
  */
 
-#include <stdint.h>
-#include <stdbool.h>
-#include <osbind.h>
+#ifndef LIBTOSEXT_H
+	#define LIBTOSEXT_H
 
-#include "libtosext.h"
+	#include <stdbool.h>
+	#include <stdint.h>
 
-bool FileExists(const char *fname)
-{
-	int32_t handle;
-	bool found = true;
+    #ifndef NULL
+        #define NULL ((char *)0)  /* NULL definition if missing */
+    #endif // NULL
 
-	handle = Fopen(fname, 0);
+	/**
+	 * @brief checks if a file given by filename does exist
+	 * @param[in] fname is the filename to check for#
+	 * @returns true if file exists
+	 * @returns false if file does not exist
+	 */
+	bool FileExists(const char * fname);
+	
+	/**
+     * @brief   returns length of file given by GEMDOS file handle
+     * @param[in] handle of file
+     * @returns length in bytes OR negative GEMDOS error code
+     */
+	int32_t FileLength(const int32_t handle);
+	
+	/**
+	 * @brief   returns length of file given by filename
+	 * @param[in] fname is the file to check the size for
+	 * @returns length in bytes OR negative GEMDOS error code
+	 */
+	int32_t FileLengthName(const char * fname);
 
-	if(handle < 0)
-	{
-		found = false;
-	}
-	else
-	{
-		Fclose(handle);
-	}
-
-	return found;
-}
+#endif

@@ -1,8 +1,8 @@
 /**
- * libcnano for Atari ST
+ * libtosext for Atari ST
  * @file FileLength.c
  * @brief implementation of FileLength() and FileLengthName()
- * @copyright (c) 2016 Matthias Arndt <marndt@asmsoftware.de>
+ * @copyright (c) 2016/2025 Matthias Arndt <marndt@final-memory.org>
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -26,12 +26,9 @@
 #include <stdbool.h>
 #include <osbind.h>
 
-#include "libcnano.h"
+#include "libtosext.h"
 
-/**
- * @brief   returns length of file given by filename
- * @returns length in bytes OR negative GEMDOS error code
- */
+
 int32_t FileLengthName(const char *fname)
 {
 	int32_t handle;
@@ -51,7 +48,6 @@ int32_t FileLengthName(const char *fname)
 
 	return length;
 }
-
 
 int32_t FileLength(const int32_t handle)
 {

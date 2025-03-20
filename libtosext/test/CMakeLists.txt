@@ -19,7 +19,10 @@ set(CMAKE_EXE_LINKER_FLAGS  "${CMAKE_C_FLAGS} ${PROJECT_SOURCE_DIR}/startup.S" )
 
 link_directories(${CMAKE_SOURCE_DIR})
 
-include_directories(${CMAKE_CURRENT_LIST_DIR})
+include_directories(
+	${CMAKE_CURRENT_LIST_DIR}
+	${CMAKE_SOURCE_DIR}/../src
+)
 
 # create target for library
 add_subdirectory(${CMAKE_SOURCE_DIR}/../src build_tosext)
