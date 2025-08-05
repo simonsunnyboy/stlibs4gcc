@@ -1,3 +1,14 @@
+/**
+ * Basepage command line parser for TOS
+ * 
+ * @file main.c
+ * 
+ * @copyright Copyright (c) 2025 Matthias Arndt <marndt@final-memory.org>
+ *            
+ *            The MIT License applies. See the file LICENSE for details.
+ * 
+ * @brief Example TTP displaying the passed command line parameters
+ */
 #include <osbind.h>
 
 int main(int argc, char *argv[]) 
